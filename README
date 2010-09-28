@@ -14,4 +14,4 @@ You can import them by running the following: (assuming no root password)
 
 ./download.php
 echo 'create database ontario_salaries;' | mysql -uroot
-cat *.sql | mysql -uroot ontario_salaries
+cat output_sql/*.sql | mysql -uroot ontario_salaries

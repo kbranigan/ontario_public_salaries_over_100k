@@ -55,20 +55,22 @@ $header_replace = array(
 'Position / Poste'=>'position',
 );
 
+if (!file_exists("cache")) system("mkdir cache");
+if (!file_exists("output_sql")) system("mkdir output_sql");
+
 foreach($all_urls as $year => $urls)
 {
-  $fp_sal = fopen("salaries_$year.sql", "w");
-  fprintf($fp_sal, "DROP TABLE IF EXISTS ontario.salaries_$year;\n");
-  fprintf($fp_sal, "CREATE TABLE IF NOT EXISTS ontario.salaries_$year(id int primary key auto_increment, year int(10), source text, category text, employer text, ministry text, sur_name text, given_name text, position text, seconded_position text, salary text, taxable_benefits text);\n");
+  $fp_sal = fopen("output_sql/salaries_$year.sql", "w");
+  //fprintf($fp_sal, "DROP TABLE IF EXISTS ontario.salaries_$year;\n");
+  fprintf($fp_sal, "CREATE TABLE IF NOT EXISTS salaries (id int primary key auto_increment, year int(10), source text, category text, employer text, ministry text, sur_name text, given_name text, position text, seconded_position text, salary text, taxable_benefits text);\n");
   
-  $fp_org = fopen("organizations_with_no_salaries_$year.sql", "w");
-  fprintf($fp_org, "DROP TABLE IF EXISTS ontario.organizations_with_no_salaries_$year\n");
-  fprintf($fp_org, "CREATE TABLE IF NOT EXISTS ontario.organizations_with_no_salaries_$year (id int primary key auto_increment, year int(10), source text, category text, organization text);\n");
+  $fp_org = fopen("output_sql/organizations_with_no_salaries_$year.sql", "w");
+  //fprintf($fp_org, "DROP TABLE IF EXISTS ontario.organizations_with_no_salaries_$year\n");
+  fprintf($fp_org, "CREATE TABLE IF NOT EXISTS organizations_with_no_salaries (id int primary key auto_increment, year int(10), source text, category text, organization text);\n");
   
   foreach($urls as $url)
   {
     print "$url\n";
-    if (!file_exists("cache")) system("mkdir cache");
     $local_file = "cache/$year" . "_" . basename($url);
     if (!file_exists($local_file))
     {
@@ -290,7 +292,7 @@ foreach($all_urls as $year => $urls)
       //print "total count is ".count($q)." - ".count($q_nosal)."\n";
       foreach (array_chunk($q, 500) as $s)
       {
-        fprintf($fp_sal, "INSERT INTO ontario.salaries (".implode(",",$headers).") VALUES " . implode(",", $s));
+        fprintf($fp_sal, "INSERT INTO salaries (".implode(",",$headers).") VALUES " . implode(",", $s)) . ";\n";
         //mysql_query($query);
         //print mysql_error();
         //print "  " . mysql_affected_rows() . " affected rows\n";
@@ -300,7 +302,7 @@ foreach($all_urls as $year => $urls)
       
       foreach (array_chunk($q_nosal, 500) as $s)
       {
-        fprintf($fp_org, "INSERT INTO ontario.organizations_with_no_salaries (".implode(",",$headers).") VALUES " . implode(",", $s));
+        fprintf($fp_org, "INSERT INTO organizations_with_no_salaries (".implode(",",$headers).") VALUES " . implode(",", $s)) . ";\n";
         //mysql_query($query);
         //print mysql_error();
         //print "  " . mysql_affected_rows() . " affected rows\n";
