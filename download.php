@@ -60,16 +60,16 @@ if (!file_exists("output_sql")) system("mkdir output_sql");
 
 system("rm output_sql/*.sql");
 
+$fp_sal = fopen("output_sql/salaries.sql", "a");
+fprintf($fp_sal, "DROP TABLE IF EXISTS salaries;\n");
+fprintf($fp_sal, "CREATE TABLE salaries (id int primary key auto_increment, year int(10), source text, category text, employer text, ministry text, sur_name text, given_name text, position text, seconded_position text, salary text, taxable_benefits text);\n");
+
+$fp_org = fopen("output_sql/organizations_with_no_salaries.sql", "a");
+fprintf($fp_org, "DROP TABLE IF EXISTS organizations_with_no_salaries;\n");
+fprintf($fp_org, "CREATE TABLE organizations_with_no_salaries (id int primary key auto_increment, year int(10), source text, category text, organization text);\n");
+
 foreach($all_urls as $year => $urls)
 {
-  $fp_sal = fopen("output_sql/salaries_$year.sql", "w");
-  //fprintf($fp_sal, "DROP TABLE IF EXISTS ontario.salaries_$year;\n");
-  fprintf($fp_sal, "CREATE TABLE IF NOT EXISTS salaries (id int primary key auto_increment, year int(10), source text, category text, employer text, ministry text, sur_name text, given_name text, position text, seconded_position text, salary text, taxable_benefits text);\n");
-  
-  $fp_org = fopen("output_sql/organizations_with_no_salaries_$year.sql", "w");
-  //fprintf($fp_org, "DROP TABLE IF EXISTS ontario.organizations_with_no_salaries_$year\n");
-  fprintf($fp_org, "CREATE TABLE IF NOT EXISTS organizations_with_no_salaries (id int primary key auto_increment, year int(10), source text, category text, organization text);\n");
-  
   foreach($urls as $url)
   {
     print "$url\n";
@@ -314,8 +314,6 @@ foreach($all_urls as $year => $urls)
     }
     if (count($q)==0 && count($q_nosal)==0) die("");
   }
-  fclose($fp_sal);
-  fclose($fp_org);
 }
 
 
