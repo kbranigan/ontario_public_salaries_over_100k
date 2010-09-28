@@ -1,4 +1,7 @@
 
+Basically, downloads all of http://www.fin.gov.on.ca/en/publications/salarydisclosure/
+and makes it usable.
+
 usage:
 
 php download.php   (or ./download.php)
