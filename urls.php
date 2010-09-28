@@ -2,7 +2,7 @@
 
 $all_urls = array(
     '2010' => array(
-      /*'http://www.fin.gov.on.ca/en/publications/salarydisclosure/2010/ministries10.html',
+      'http://www.fin.gov.on.ca/en/publications/salarydisclosure/2010/ministries10.html',
       'http://www.fin.gov.on.ca/en/publications/salarydisclosure/2010/legassembly10.html',
       'http://www.fin.gov.on.ca/en/publications/salarydisclosure/2010/judiciary10.html',
       'http://www.fin.gov.on.ca/en/publications/salarydisclosure/2010/crown10.html',
@@ -16,10 +16,9 @@ $all_urls = array(
       'http://www.fin.gov.on.ca/en/publications/salarydisclosure/2010/hospit10.html',
       'http://www.fin.gov.on.ca/en/publications/salarydisclosure/2010/otherp10.html',
       'http://www.fin.gov.on.ca/en/publications/salarydisclosure/2010/nosal10.html',
-      */
+      
       'http://www.fin.gov.on.ca/en/publications/salarydisclosure/2010/addenda_10.html',  // August 27, 2010
     ),
-    /*
     '2009' => array(
       'http://www.fin.gov.on.ca/en/publications/salarydisclosure/2009/ministries09.html',
       'http://www.fin.gov.on.ca/en/publications/salarydisclosure/2009/legassembly09.html',
@@ -212,6 +211,6 @@ $all_urls = array(
       'http://www.fin.gov.on.ca/en/publications/salarydisclosure/1997/addend1.html',  // April 21, 1997
       'http://www.fin.gov.on.ca/en/publications/salarydisclosure/1997/addend2_nosal.html',  // April 21, 1997
       'http://www.fin.gov.on.ca/en/publications/salarydisclosure/1997/addend3.html',  // April 21, 1997
-    ),*/
+    ),
   );
 ?>

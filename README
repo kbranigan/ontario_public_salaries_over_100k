@@ -1,0 +1,14 @@
+
+usage:
+
+php download.php   (or ./download.php)
+
+This script downloads the files listed in urls.php and caches them in /cache
+
+It creates a series of mysql dump files that you can import however you like.
+
+You can import them by running the following: (assuming no root password)
+
+./download.php
+echo 'create database ontario_salaries;' | mysql -uroot
+cat *.sql | mysql -uroot ontario_salaries
