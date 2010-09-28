@@ -58,6 +58,8 @@ $header_replace = array(
 if (!file_exists("cache")) system("mkdir cache");
 if (!file_exists("output_sql")) system("mkdir output_sql");
 
+system("rm output_sql/*.sql");
+
 foreach($all_urls as $year => $urls)
 {
   $fp_sal = fopen("output_sql/salaries_$year.sql", "w");
@@ -292,7 +294,7 @@ foreach($all_urls as $year => $urls)
       //print "total count is ".count($q)." - ".count($q_nosal)."\n";
       foreach (array_chunk($q, 500) as $s)
       {
-        fprintf($fp_sal, "INSERT INTO salaries (".implode(",",$headers).") VALUES " . implode(",", $s)) . ";\n";
+        fprintf($fp_sal, "INSERT INTO salaries (".implode(",",$headers).") VALUES " . implode(",", $s) . ";\n");
         //mysql_query($query);
         //print mysql_error();
         //print "  " . mysql_affected_rows() . " affected rows\n";
@@ -302,7 +304,7 @@ foreach($all_urls as $year => $urls)
       
       foreach (array_chunk($q_nosal, 500) as $s)
       {
-        fprintf($fp_org, "INSERT INTO organizations_with_no_salaries (".implode(",",$headers).") VALUES " . implode(",", $s)) . ";\n";
+        fprintf($fp_org, "INSERT INTO organizations_with_no_salaries (".implode(",",$headers).") VALUES " . implode(",", $s) . ";\n");
         //mysql_query($query);
         //print mysql_error();
         //print "  " . mysql_affected_rows() . " affected rows\n";
