@@ -15,6 +15,7 @@ $header_replace = array(
 'Given Name / Pr&#233;nom'=>'given_name',
 'Given Name/Pr&eacute;nom'=>'given_name',
 'Given Name / Pr&eacute;nom'=>'given_name',
+'Given Name / Prénom'=>'given_name',
 
 'Ministry / Minist&#232;re'=>'ministry',
 
@@ -58,15 +59,15 @@ $header_replace = array(
 if (!file_exists("cache")) system("mkdir cache");
 if (!file_exists("output_sql")) system("mkdir output_sql");
 
-system("rm output_sql/*.sql");
+//system("rm output_sql/*.sql");
 
-$fp_sal = fopen("output_sql/salaries.sql", "a");
-fprintf($fp_sal, "DROP TABLE IF EXISTS salaries;\n");
-fprintf($fp_sal, "CREATE TABLE salaries (id int primary key auto_increment, year int(10), source text, category text, employer text, ministry text, sur_name text, given_name text, position text, seconded_position text, salary text, taxable_benefits text);\n");
+$fp_sal = fopen("output_sql/salaries2011.sql", "w");
+//fprintf($fp_sal, "DROP TABLE IF EXISTS salaries;\n");
+fprintf($fp_sal, "CREATE TABLE IF NOT EXISTS salaries (id int primary key auto_increment, year int(10), source text, category text, employer text, ministry text, sur_name text, given_name text, position text, seconded_position text, salary text, taxable_benefits text);\n");
 
-$fp_org = fopen("output_sql/organizations_with_no_salaries.sql", "a");
-fprintf($fp_org, "DROP TABLE IF EXISTS organizations_with_no_salaries;\n");
-fprintf($fp_org, "CREATE TABLE organizations_with_no_salaries (id int primary key auto_increment, year int(10), source text, category text, organization text);\n");
+$fp_org = fopen("output_sql/organizations_with_no_salaries2011.sql", "w");
+// fprintf($fp_org, "DROP TABLE IF EXISTS organizations_with_no_salaries;\n");
+fprintf($fp_org, "CREATE TABLE IF NOT EXISTS organizations_with_no_salaries (id int primary key auto_increment, year int(10), source text, category text, organization text);\n");
 
 foreach($all_urls as $year => $urls)
 {
@@ -76,6 +77,7 @@ foreach($all_urls as $year => $urls)
     $local_file = "cache/$year" . "_" . basename($url);
     if (!file_exists($local_file))
     {
+      $contents = file_get_contents($url);
       file_put_contents($local_file, $contents);
     }
     $contents = file_get_contents($local_file);
@@ -95,6 +97,8 @@ foreach($all_urls as $year => $urls)
     $contents = str_ireplace('<SPAN>', '', $contents);
     $contents = str_ireplace('</SPAN>', '', $contents);
     $contents = str_ireplace('<BR>', '', $contents);
+    $contents = str_ireplace('<EM>', '', $contents);
+    $contents = str_ireplace('</EM>', '', $contents);
     $contents = str_ireplace('<BR/>', '', $contents);
     $contents = str_ireplace('<BR />', '', $contents);
     $contents = str_ireplace(' NAME="C_OPS"', '', $contents);
@@ -292,9 +296,11 @@ foreach($all_urls as $year => $urls)
       if ($headers[2] == 'ID') array_splice($headers, 2, 1);
       
       //print "total count is ".count($q)." - ".count($q_nosal)."\n";
-      foreach (array_chunk($q, 500) as $s)
+      //foreach (array_chunk($q, 500) as $s)
+      foreach ($q as $s)
       {
-        fprintf($fp_sal, "INSERT INTO salaries (".implode(",",$headers).") VALUES " . implode(",", $s) . ";\n");
+        //fprintf($fp_sal, "INSERT INTO salaries (".implode(",",$headers).") VALUES " . implode(",", $s) . ";\n");
+        fprintf($fp_sal, "INSERT INTO salaries (".implode(",",$headers).") VALUES $s;\n");
         //mysql_query($query);
         //print mysql_error();
         //print "  " . mysql_affected_rows() . " affected rows\n";
@@ -302,9 +308,11 @@ foreach($all_urls as $year => $urls)
         //if (mysql_affected_rows() != count($s)) print "FUCK FUCK mysql_affected_rows() = " . mysql_affected_rows() . " and count(s) = " . count($s) . "\n";
       }
       
-      foreach (array_chunk($q_nosal, 500) as $s)
+      //foreach (array_chunk($q_nosal, 500) as $s)
+      foreach ($q_nosal as $s)
       {
-        fprintf($fp_org, "INSERT INTO organizations_with_no_salaries (".implode(",",$headers).") VALUES " . implode(",", $s) . ";\n");
+        //fprintf($fp_org, "INSERT INTO organizations_with_no_salaries (".implode(",",$headers).") VALUES " . implode(",", $s) . ";\n");
+        fprintf($fp_org, "INSERT INTO organizations_with_no_salaries (".implode(",",$headers).") VALUES $s;\n");
         //mysql_query($query);
         //print mysql_error();
         //print "  " . mysql_affected_rows() . " affected rows\n";
@@ -312,7 +320,7 @@ foreach($all_urls as $year => $urls)
         //if (mysql_affected_rows() != count($s)) print "FUCK FUCK mysql_affected_rows() = " . mysql_affected_rows() . " and count(s) = " . count($s) . "\n";
       }
     }
-    if (count($q)==0 && count($q_nosal)==0) die("");
+    if (count($q)==0 && count($q_nosal)==0) die("count(q) = " . count($q) . ", count(q_nosal) = " . count($q_nosal) . "\n");
   }
 }
 
